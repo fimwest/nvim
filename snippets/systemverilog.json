@@ -1,0 +1,137 @@
+{
+	"Shixu": {
+		"prefix": "alr",
+		"body": [
+			"reg [$1:0] $2;//",
+			"always@(posedge clk or negedge rst_n) begin",
+				"\tif(rst_n==1'b0) begin//",
+					"\t\t$2 <= 0;",
+				"\tend",
+				"\telse begin",
+					"\t\t$2 <= $3;",
+				"\tend",
+			"end"
+		]
+	},
+
+	"Shixu2": {
+		"prefix": "alr2",
+		"body": [
+			"reg [$1:0] $2;//",
+			"always@(posedge clk or negedge rst_n) begin",
+				"\tif(rst_n==1'b0) begin//",
+					"\t\t$2 <= 0;",
+				"\tend",
+				"\telse if($3) begin",
+					"\t\t$2 <= $4;",
+				"\tend",
+				"\telse begin",
+					"\t\t$2 <= $6;",
+				"\tend",
+			"end"
+		]
+	},
+
+    "State machine": {
+		"prefix": "Ztj",
+		"body": [
+			"//Four-stage state machine;",
+            "parameter\tIDLE = $1'd0;",
+            "parameter\tS1\t = $1'd1;",
+            "parameter\tS2\t = $1'd2;",
+            "parameter\tS3\t = $1'd3;",
+            "",
+            "reg[$1-1:0]\tstate_n;",
+            "reg[$1-1:0]\tstate_c;",
+            "wire\t\tidl2s1_start;",
+            "wire\t\ts12s2_start;",
+            "wire\t\ts22s3_start;",
+            "",
+            "//The first section: synchronous timing always module, formatted to describe the transfer of the secondary register to the live register�?",
+            "always@(posedge clk or negedge rst_n)begin",
+            "\tif(!rst_n)begin",
+            "\t\tstate_c <= IDLE;",
+            "\tend",
+            "\telse begin",
+            "\t\tstate_c <= state_n;",
+            "\tend",
+            "end",
+            "",
+            "//The second paragraph: The combinational logic always module describes the state transition condition judgment.",
+            "always@(*)begin",
+            "\tcase(state_c)",
+            "\t\tIDLE:begin",
+            "\t\t\tif(idl2s1_start)begin",
+            "\t\t\t\tstate_n = S1;",
+            "\t\t\tend",
+            "\t\t\telse begin",
+            "\t\t\t\tstate_n = state_c;",
+            "\t\t\tend",
+            "\t\tend",
+            "\t\tS1:begin",
+            "\t\t\tif(s12s2_start)begin",
+            "\t\t\t\tstate_n = S2;",
+            "\t\t\tend",
+            "\t\t\telse begin",
+            "\t\t\t\tstate_n = state_c;",
+            "\t\t\tend",
+            "\t\tend",
+            "\t\tS2:begin",
+            "\t\t\tif(s22s3_start)begin",
+            "\t\t\t\tstate_n = S3;",
+            "\t\t\tend",
+            "\t\t\telse begin",
+            "\t\t\t\tstate_n = state_c;",
+            "\t\t\tend",
+            "\t\tend",
+            "\t\tdefault:begin",
+            "\t\t\tstate_n = IDLE;",
+            "\t\tend",
+            "\tendcase",
+            "end",
+            "// Third paragraph: Design transfer conditions�?",
+            "assign idl2s1_start\t= state_c==IDLE\t&& $2;",
+            "assign s12s2_start\t= state_c==S1\t&& $3;",
+            "assign s22s3_start\t= state_c==S2\t&& $4;"
+		]
+	},
+
+    "clogb2": {
+		"prefix": "clogb2",
+		"body": [
+			"function integer clogb2(input integer depth);begin",
+            "\tif(depth == 0)",
+            "\t\tclogb2 = 1;",
+            "\telse if(depth != 0)",
+            "\t\tfor(clogb2=0 ; depth>0 ; clogb2=clogb2+1)",
+            "\t\t\tdepth=depth >> 1;",
+            "\tend",
+            "endfunction"
+		]
+	},
+
+    "Zuhe": {
+		"prefix": "al*",
+		"body": [
+            "reg\t[$1:0]\t$2;",
+			"always@(*) begin",
+            "\t$2 = $3;",
+            "end"
+		]
+	},
+
+    "Zuhe2": {
+		"prefix": "al*2",
+		"body": [
+            "reg\t[$1:0]\t$2;",
+			"always@(*) begin",
+            "\tif($3) begin",
+            "\t\t$2 = $4;",
+            "\tend",
+            "\telse begin",
+            "\t\t$2 = $5;",
+            "\tend",
+            "end"
+		]
+	}
+}
