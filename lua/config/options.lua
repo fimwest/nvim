@@ -5,3 +5,16 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
 -- vim.g.autoformat = false
+
+vim.filetype.add({
+  extension = {
+    v = "systemverilog",
+    vh = "systemverilog",
+    sv = "systemverilog",
+    svh = "systemverilog",
+    vp = "systemverilog",
+    svp = "systemverilog",
+    svi = "systemverilog",
+    sva = "systemverilog",
+  },
+})
